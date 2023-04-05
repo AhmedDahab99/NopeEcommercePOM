@@ -23,7 +23,7 @@ public class RegisterPage {
     private final By registerAccountButton = By.id("register-button");
 
 
-    public AccountCreatedPage fillUserData(String firstName, String lastName, String email, String password, String confirmPassword, String company, String year, String month, String day) {
+    public LandingPage fillUserData(String firstName, String lastName, String email, String password, String confirmPassword, String company, String year, String month, String day) {
         webDriver.findElement(genderButton).click();
         webDriver.findElement(firstNameField).sendKeys(firstName);
         webDriver.findElement(lastNameField).sendKeys(lastName);
@@ -41,6 +41,6 @@ public class RegisterPage {
         webDriver.findElement(passwordField).sendKeys(password);
         webDriver.findElement(confirmPasswordField).sendKeys(confirmPassword);
         webDriver.findElement(registerAccountButton).click();
-        return new AccountCreatedPage(webDriver);
+        return new LandingPage(webDriver);
     }
 }

@@ -6,7 +6,7 @@ import org.testng.annotations.BeforeClass;
 
 public class TestBase {
     protected WebDriver driver;
-    protected HomePage homePageObject;
+    protected LandingPage landingPageObject;
 
     @BeforeClass
     public  void setup(){
@@ -15,7 +15,7 @@ public class TestBase {
         driver = new ChromeDriver(options);
         driver.navigate().to("https://demo.nopcommerce.com/");
         driver.manage().window().maximize();
-        homePageObject =new HomePage(driver);
+        landingPageObject =new LandingPage(driver);
     }
     @AfterClass
     public void quit(){

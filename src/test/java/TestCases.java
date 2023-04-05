@@ -1,18 +1,53 @@
+import org.openqa.selenium.By;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestCases extends TestBase {
 
-    protected RegisterPage registerPageObject;
+    protected RegisterPage registerPageObject = new RegisterPage(driver);
+    protected LoginPage loginPageObj = new LoginPage(driver);
+    protected HomePage  homePageObj = new HomePage(driver);
+    public String email ="oonn@gm.com";
+    public String password ="12345678";
+    public String confirmPassword ="12345678";
+    public String firstName ="Ahmed";
+    public String lastName ="Omar";
+    public String company ="Tech";
+    public String birthYear ="1999";
+    public String birthMonth ="June";
+    public String birthDay ="1";
 
-    @Test
+    @Test(priority = 1)
     public void verifyThatUserCanOpenRegisterPage() {
-        registerPageObject = homePageObject.openRegisterPage();
+        registerPageObject = landingPageObject.openRegisterPage();
     }
 
-    @Test
+    @Test(priority = 2)
     public void verifyUserCanRegisterNewAccount() {
-     registerPageObject.fillUserData(
-                "Ahmed", "Omar", "ahmedom@gmail.net", "12345678", "12345678", "tech", "1999", "June", "1"
+        registerPageObject.fillUserData(
+                firstName, lastName, email, password,
+                confirmPassword, company, birthYear, birthMonth, birthDay
         );
+        By accountCreatedText = By.xpath("//div[text()='Your registration completed']");
+        String accountCreated = driver.findElement(accountCreatedText).getText();
+        Assert.assertEquals(accountCreated, "Your registration completed");
+    }
+
+    @Test(priority = 3)
+    public void verifyThatUserCanOpenLoginPage() {
+        loginPageObj = landingPageObject.openLoginPage();
+    }
+
+    @Test(priority = 4)
+    public void verifyUserCanLogin() {
+        homePageObj = loginPageObj.verifyUserCanLogin(email, password);
+        By logoutText = By.linkText("Log out");
+        String logoutVisible = driver.findElement(logoutText).getText();
+        Assert.assertEquals(logoutVisible, "Log out");
+    }
+
+    @Test (priority = 5)
+    public void addProductToCart(){
+        homePageObj.addProductToCart();
     }
 }
