@@ -2,12 +2,16 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 public class TestCases extends TestBase {
 
     protected RegisterPage registerPageObject = new RegisterPage(driver);
     protected LoginPage loginPageObj = new LoginPage(driver);
     protected HomePage  homePageObj = new HomePage(driver);
-    public String email ="qqq@gm.com";
+    protected ShoppingCartPage  shoppingCartObj = new ShoppingCartPage(driver);
+    protected CheckoutPage  checkoutOBJ = new CheckoutPage(driver);
+    public String email ="aa@gm.com";
     public String password ="12345678";
     public String confirmPassword ="12345678";
     public String firstName ="Ahmed";
@@ -16,6 +20,12 @@ public class TestCases extends TestBase {
     public String birthYear ="1999";
     public String birthMonth ="June";
     public String birthDay ="1";
+    public String country ="United States";
+    public String state ="Florida";
+    public String city ="galaxy";
+    public String address1 ="galaxy street";
+    public String postalCode ="555";
+    public String phone ="564654646";
 
     @Test
     public void verifyThatUserCanOpenRegisterPage() {
@@ -28,6 +38,7 @@ public class TestCases extends TestBase {
                 firstName, lastName, email, password,
                 confirmPassword, company, birthYear, birthMonth, birthDay
         );
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         By accountCreatedText = By.xpath("//div[text()='Your registration completed']");
         String accountCreated = driver.findElement(accountCreatedText).getText();
         Assert.assertEquals(accountCreated, "Your registration completed");
@@ -42,8 +53,8 @@ public class TestCases extends TestBase {
     public void verifyUserCanLogin() {
         homePageObj = loginPageObj.verifyUserCanLogin(email, password);
         By logoutText = By.linkText("Log out");
-        String logoutVisible = driver.findElement(logoutText).getText();
-        Assert.assertEquals(logoutVisible, "Log out");
+        boolean logoutVisible = homePageObj.webDriver.findElement(logoutText).isDisplayed();
+        Assert.assertTrue(logoutVisible);
     }
 
     @Test (dependsOnMethods = {"verifyUserCanLogin"})
@@ -61,6 +72,26 @@ public class TestCases extends TestBase {
 
     @Test (dependsOnMethods = {"addProductToCart"})
     public void navigateToShoppingCartPage(){
-        homePageObj.navigateToShoppingCartPage();
+      shoppingCartObj = homePageObj.navigateToShoppingCartPage();
     }
+
+//    @Test(dependsOnMethods = {"navigateToShoppingCartPage"})
+//    public void updateProductQuantity(String quantity){
+//        shoppingCartObj.updateProductQuantity(quantity);
+//    }
+
+    @Test (dependsOnMethods = {"navigateToShoppingCartPage"})
+    public void doCheckout(){
+        checkoutOBJ = shoppingCartObj.checkoutCart();
+    }
+
+    @Test (dependsOnMethods = {"doCheckout"})
+    public void confirmOrder() throws InterruptedException {
+        checkoutOBJ.fillAddressDetailsData(firstName,lastName,email,country,state,city,address1,postalCode,phone);
+        checkoutOBJ.selectShippingMethod();
+        checkoutOBJ.selectPaymentMethod();
+        checkoutOBJ.verifyPaymentInfo();
+        checkoutOBJ.confirmOrder();
+    }
+
 }

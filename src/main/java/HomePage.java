@@ -36,10 +36,11 @@ public class HomePage {
         webDriver.findElement(closeButton).click();
     }
 
-    public void navigateToShoppingCartPage(){
+    public ShoppingCartPage navigateToShoppingCartPage(){
         WebElement cartLabelElement = webDriver.findElement(cartLabel);
         Actions actions = new Actions(webDriver);
         actions.moveToElement(cartLabelElement).perform();
         webDriver.findElement(goToCartButton).click();
+        return new ShoppingCartPage(webDriver);
     }
 }
